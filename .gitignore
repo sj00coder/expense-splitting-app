@@ -43,3 +43,10 @@ example
 /android
 
 **/.vscode
+
+# Python backend
+backend/.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+backend/data/*.db
