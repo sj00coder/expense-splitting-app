@@ -1,56 +1,66 @@
-# Welcome to your Expo app 👋
+# Split
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Split is a shared expense app for trips and housemates. People in a group see the same expenses, balances, and history.
 
-## Get started
+A group is a trip or a house with one currency (USD, EUR, GBP, INR, CAD, or AUD). Add an expense and split it equally, by exact amounts, or by shares. The app shows a simplified “who owes whom” list, records settle-up payments, and exports the history as CSV. There are no accounts or passwords: each device keeps a user id, you pick a display name, and anyone with the group code can join.
 
-1. Install dependencies
+The app is Expo (SDK 58) with Expo Router. The API is FastAPI with a SQLite file at `backend/data/app.db`, created on first start.
 
-   ```bash
-   npm install
-   ```
+## Run the API
 
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+From the repo root:
 
 ```bash
-npm run reset-project
+python -m venv backend/.venv
 ```
 
-This command will move the starter code to the **example** directory and create a blank **src/app** directory where you can start developing.
+Windows:
 
-### Other setup steps
+```bash
+backend/.venv/Scripts/python -m pip install -r backend/requirements.txt
+backend/.venv/Scripts/python -m uvicorn backend.app.main:app --reload --host 0.0.0.0 --port 8000
+```
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+macOS and Linux:
 
-## Learn more
+```bash
+backend/.venv/bin/python -m pip install -r backend/requirements.txt
+backend/.venv/bin/python -m uvicorn backend.app.main:app --reload --host 0.0.0.0 --port 8000
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+The API listens on [http://localhost:8000](http://localhost:8000).
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Run the app
 
-## Join the community
+In a second terminal, from the repo root:
 
-Join our community of developers creating universal apps.
+```bash
+npm install
+npx expo start
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Then open the web build, an Android emulator, an iOS simulator, or Expo Go. Shortcuts:
+
+```bash
+npm run web
+npm run android
+npm run ios
+```
+
+The app calls `http://localhost:8000` unless you set `EXPO_PUBLIC_API_URL`. A phone on the same network cannot use `localhost`; point it at this computer’s LAN address and restart Expo:
+
+```bash
+EXPO_PUBLIC_API_URL=http://192.168.1.10:8000 npx expo start
+```
+
+On first launch, save a display name on the Profile tab. After that you can create a group or join one with its code.
+
+## Checks
+
+```bash
+backend/.venv/Scripts/python -m pytest
+npx tsc --noEmit
+npx expo lint
+```
+
+On macOS and Linux, call pytest with `backend/.venv/bin/python` instead.
